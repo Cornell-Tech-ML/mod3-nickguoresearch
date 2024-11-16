@@ -89,7 +89,7 @@ Epoch: 470/500, loss: 0.0047279841183412155, correct: 48
 Epoch: 480/500, loss: 0.6904147014812084, correct: 50
 Epoch: 490/500, loss: 0.3981231184195425, correct: 50
 
-!(image-2.png)
+![Simple CPU](image-2.png)
 
 python run_fast_tensor.py --BACKEND cpu --HIDDEN 100 --DATASET xor --RATE 0.05
 XOR - PTS = 50, Time per epoch: 0.056s
@@ -145,7 +145,7 @@ Epoch: 470/500, loss: 1.894280638124304, correct: 49
 Epoch: 480/500, loss: 1.0217812262667525, correct: 50
 Epoch: 490/500, loss: 0.04799079159743839, correct: 48
 
-!(image-1.png)
+![XOR CPU](image-1.png)
 
 python run_fast_tensor.py --BACKEND cpu --HIDDEN 100 --DATASET split --RATE 0.05
 SPLIT - PTS = 50, Time per epoch: 0.047s
@@ -201,7 +201,7 @@ Epoch: 470/500, loss: 0.058704657315016694, correct: 50
 Epoch: 480/500, loss: 0.0742046226071631, correct: 50
 Epoch: 490/500, loss: 0.9089821736205399, correct: 50
 
-!(image-3.png)
+![SPLIT CPU](image-3.png)
 
 ==========================================================
 GPU Benchmark
@@ -428,7 +428,7 @@ Epoch: 470/500, loss: 0.2425836830933415, correct: 147
 Epoch: 480/500, loss: 0.8353877116753304, correct: 149
 Epoch: 490/500, loss: 1.2350589689137546, correct: 150
 
-!(image.png)
+![BIGGER MODEL XOR CPU](image.png)
 
 !cd $DIR; time PYTHONPATH=/content/$DIR python project/run_fast_tensor.py --BACKEND gpu --PTS 150 --HIDDEN 200 --DATASET xor --RATE 0.01
 XOR - PTS = 150, Time per epoch: 4.588s, total time: 38m14.135s
