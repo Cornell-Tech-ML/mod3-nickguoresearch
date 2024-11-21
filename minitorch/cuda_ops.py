@@ -410,19 +410,31 @@ def _mm_practice(out: Storage, a: Storage, b: Storage, size: int) -> None:
     """
     BLOCK_DIM = 32
 
+    # Shared memory for matrix a and b
     a_shared = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
     b_shared = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
+    
+    # Global row and col index for output
     i = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     j = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
+
+    # Local row and col index within block for shared memory
     local_i = cuda.threadIdx.x
     local_j = cuda.threadIdx.y
-    if i >= 0 and i < size and j >= 0 and j < size:
+
+    # Ensure thread's global indices are within bounds of matrix
+    if 0 <= i < size and 0 <= j < size:
+        # Copy from global memory to shared for matrix a and b
         a_shared[local_i, local_j] = a[i * size + j]
         b_shared[local_i, local_j] = b[i * size + j]
+        # Sync all threads in the block
         cuda.syncthreads()
+        # Local accumulator for dot product
         total = 0.0
+        # Dot product between row of a_shared and col of b_shared, shared memory so each read once
         for k in range(size):
             total += a_shared[local_i, k] * b_shared[k, local_j]
+        # Write to output matrix in global memory
         out[i * size + j] = total
 
 
@@ -494,32 +506,42 @@ def _tensor_matrix_multiply(
     #    c) Compute the dot produce for position c[i, j]
 
     total = 0.0
-    # Loop to copy into shared memory
+    # Loop over shared dim in blocks to copy into shared memory
     for start in range(0, a_shape[2], BLOCK_DIM):
         a_k = start + pj  # Current position in shared dimension
-        # Guard for matrix a and copy in to shared
+        # Guard to ensure within bounds for matrix a
         if i < out_shape[1] and a_k < a_shape[2]:
+            # Calculate index to access element in global memory
             a_idx = batch * a_batch_stride + i * a_strides[1] + a_k * a_strides[2]
+            # Copy element from global memory to shared memory
             a_shared[pi, pj] = a_storage[a_idx]
 
-        # Guard for matrix b and copy in to shared
-        b_k = start + pi
+        b_k = start + pi # Current position in shared dimension 
+        # Guard to ensure within bounds for matrix b
         if b_k < a_shape[2] and j < out_shape[2]:
+            # Calculate index to access element in global memory
             b_idx = batch * b_batch_stride + b_k * b_strides[1] + j * b_strides[2]
+            # Copy element from global memory to shared memory
             b_shared[pi, pj] = b_storage[b_idx]
 
         # Ensure all threads have loaded their data into shared memory
         cuda.syncthreads()
 
-        # Add dot products to total after copying
+        # Accumulate dot products to total from shared memory
         for k in range(BLOCK_DIM):
             # Guard to ensure values within bounds to avoid using values from previous iterations
             if start + k < a_shape[2]:
+                # Accumulate the product of corresponding elements from a_shared and b_shared
                 total += a_shared[pi, k] * b_shared[k, pj]
+        
+        # Sync again 
+        cuda.syncthreads()
 
-    # Guard to ensure in bounds then copy to out
+    # Guard to ensure within bounds
     if i < out_shape[1] and j < out_shape[2]:
+        # Calculate index for output matrix
         out_idx = batch * out_strides[0] + i * out_strides[1] + j * out_strides[2]
+        # Store dot product in the output
         out[out_idx] = total
 
 
