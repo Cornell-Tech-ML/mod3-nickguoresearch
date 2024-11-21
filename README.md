@@ -34,7 +34,7 @@ The files that will be synced are:
 CPU Benchmark
 ==========================================================
 
-3.4 Graph - Fast vs GPU 
+3.4 Graph - Fast vs GPU
 ![Fast vs. GPU](fastvsgpu.png)
 
 python run_fast_tensor.py --BACKEND cpu --HIDDEN 100 --DATASET simple --RATE 0.05
