@@ -369,7 +369,7 @@ Epoch  450  loss  0.08373479880333483 correct 50
 Epoch  460  loss  0.009504125887892196 correct 49
 Epoch  470  loss  0.6998644916326203 correct 50
 Epoch  480  loss  0.18463887258205736 correct 50
-Epoch  490  loss  0.5342768408831664 correct 46
+Epoch  490  loss  0.5342768408831664 correct 49
 
 Bigger Model Benchmark
 ==========================================================
