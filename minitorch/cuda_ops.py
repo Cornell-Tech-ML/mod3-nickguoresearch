@@ -413,7 +413,7 @@ def _mm_practice(out: Storage, a: Storage, b: Storage, size: int) -> None:
     # Shared memory for matrix a and b
     a_shared = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
     b_shared = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
-    
+
     # Global row and col index for output
     i = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     j = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
@@ -516,7 +516,7 @@ def _tensor_matrix_multiply(
             # Copy element from global memory to shared memory
             a_shared[pi, pj] = a_storage[a_idx]
 
-        b_k = start + pi # Current position in shared dimension 
+        b_k = start + pi  # Current position in shared dimension
         # Guard to ensure within bounds for matrix b
         if b_k < a_shape[2] and j < out_shape[2]:
             # Calculate index to access element in global memory
@@ -533,8 +533,8 @@ def _tensor_matrix_multiply(
             if start + k < a_shape[2]:
                 # Accumulate the product of corresponding elements from a_shared and b_shared
                 total += a_shared[pi, k] * b_shared[k, pj]
-        
-        # Sync again 
+
+        # Sync again
         cuda.syncthreads()
 
     # Guard to ensure within bounds
