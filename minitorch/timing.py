@@ -2,6 +2,7 @@ from typing import Any
 import minitorch
 import time
 import numpy as np
+import matplotlib.pyplot as plt
 
 FastTensorBackend = minitorch.TensorBackend(minitorch.FastOps)
 GPUBackend = minitorch.TensorBackend(minitorch.CudaOps)
@@ -22,6 +23,7 @@ if __name__ == "__main__":
     run_matmul(FastTensorBackend)
     run_matmul(GPUBackend)
 
+    sizes = [64, 128, 256, 512, 1024]
     ntrials = 3
     times = {}
     for size in [64, 128, 256, 512, 1024]:
@@ -55,3 +57,18 @@ if __name__ == "__main__":
         print(f"Size: {size}")
         for b, t in stimes.items():
             print(f"    {b}: {t:.5f}")
+    
+    # Simplified Plotting
+    plt.figure(figsize=(8, 5))
+    plt.plot(sizes, [times[size]["fast"] for size in sizes], 
+             label='CPU Backend', color='blue')
+    plt.plot(sizes, [times[size]["gpu"] for size in sizes], 
+             label='GPU Backend', color='red')
+    
+    plt.title('Matrix Multiplication: CPU vs GPU Performance')
+    plt.xlabel('Matrix Size')
+    plt.ylabel('Execution Time (seconds)')
+    plt.legend()
+    
+    plt.tight_layout()
+    plt.show()
