@@ -31,12 +31,11 @@ The files that will be synced are:
 
         minitorch/tensor_data.py minitorch/tensor_functions.py minitorch/tensor_ops.py minitorch/operators.py minitorch/scalar.py minitorch/scalar_functions.py minitorch/module.py minitorch/autodiff.py minitorch/module.py project/run_manual.py project/run_scalar.py project/run_tensor.py minitorch/operators.py minitorch/module.py minitorch/autodiff.py minitorch/tensor.py minitorch/datasets.py minitorch/testing.py minitorch/optim.py
 
-==========================================================
 CPU Benchmark
 ==========================================================
 
 3.4 Graph - Fast vs GPU 
-![Fast vs GPU](fastvsgpu.png)
+![Fast vs. GPU](fastvsgpu.png)
 
 python run_fast_tensor.py --BACKEND cpu --HIDDEN 100 --DATASET simple --RATE 0.05
 SIMPLE - PTS = 50, Time per epoch: 0.056s
@@ -206,7 +205,6 @@ Epoch: 490/500, loss: 0.9089821736205399, correct: 50
 
 ![SPLIT CPU](image-3.png)
 
-==========================================================
 GPU Benchmark
 ==========================================================
 
@@ -373,7 +371,6 @@ Epoch  470  loss  0.6998644916326203 correct 50
 Epoch  480  loss  0.18463887258205736 correct 50
 Epoch  490  loss  0.5342768408831664 correct 46
 
-==========================================================
 Bigger Model Benchmark
 ==========================================================
 
